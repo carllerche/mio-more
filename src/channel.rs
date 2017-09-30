@@ -167,6 +167,13 @@ impl<T> Receiver<T> {
             Ok(res)
         })
     }
+
+    pub fn recv(&self) -> Result<T, mpsc::RecvError> {
+        self.rx.recv().and_then(|res| {
+            let _ = self.ctl.dec();
+            Ok(res)
+        })
+    }
 }
 
 impl<T> Evented for Receiver<T> {
